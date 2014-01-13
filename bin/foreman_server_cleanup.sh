@@ -18,7 +18,7 @@ for r in ${RPMS}; do
 done
 
 DIRS="/var/lib/mysql /var/lib/puppet /var/lib/foreman /var/lib/foreman-proxy \
-      /etc/puppet /etc/foreman /etc/foreman-proxy /etc/mysql /etc/my.cnf "
+      /etc/puppet /etc/foreman /etc/foreman-proxy /etc/mysql /etc/my.cnf /etc/httpd"
 
 for d in ${DIRS}; do
 	[ -d ${d} ] && rm -rf ${d}
