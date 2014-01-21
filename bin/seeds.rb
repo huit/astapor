@@ -48,6 +48,7 @@ yum
 dhclient
 ntp
 wget
+redhat-lsb-core
 @Core
 
 <% if @dynamic -%>
@@ -123,7 +124,7 @@ Setting[:foreman_url] = Facter.fqdn
 os = Operatingsystem.where(:name => "RedHat", :major => "6", :minor => "4").first
 os ||= Operatingsystem.create(:name => "RedHat", :major => "6", :minor => "4")
 os.type = "Redhat"
-os.description = "RHEL 6.4" if os.respond_to? :description=
+os.description = "RHEL Server 6.4" if os.respond_to? :description=
 os.save!
 
 # Installation Media - comes as standard, just need to associate it
@@ -265,8 +266,8 @@ params = {
   "swift_ring_server"             => '172.16.0.1',
   "fixed_network_range"           => '10.0.0.0/24',
   "floating_network_range"        => '10.0.1.0/24',
-  "controller_priv_ip"            => '172.16.0.1',
-  "controller_pub_ip"             => '172.16.1.1',
+  "controller_priv_host"          => '172.16.0.1',
+  "controller_pub_host"           => '172.16.1.1',
   "mysql_host"                    => '172.16.0.1',
   "mysql_virtual_ip"              => '192.168.200.220',
   "mysql_bind_address"            => '0.0.0.0',
