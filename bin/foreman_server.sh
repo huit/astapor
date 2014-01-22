@@ -33,6 +33,10 @@ if [ "x$FOREMAN_GATEWAY" = "x" ]; then
   echo "  use 'false' to have no gateway offered for non-routable networks"
   exit 1
 fi
+if  [ "x$PROVISIONING_INT" = "x" ]; then
+  echo "Warning: You have not defined the interface to use to provision systems."
+  echo " This script will attempt to guess that interface."
+fi
 fi
 
 if [ "x$SCL_RUBY_HOME" = "x" ]; then
@@ -79,7 +83,12 @@ if [ "$FOREMAN_PROVISIONING" = "true" ]; then
   fi
   PRIMARY_INT=$(route|grep default|awk ' { print ( $(NF) ) }')
   PRIMARY_PREFIX=$(facter network_${PRIMARY_INT} | cut -d. -f1-3)
-  SECONDARY_INT=$(facter -p|grep ipaddress_|grep -Ev "_lo|$PRIMARY_INT"|awk -F"[_ ]" '{print $2;exit 0}')
+  if [ "x${PROVISIONING_INT}" = "x" ]; then
+    SECONDARY_INT=$(facter -p|grep ipaddress_|grep -Ev "_lo|$PRIMARY_INT"|awk -F"[_ ]" '{print $2;exit 0}')
+  else
+    SECONDARY_INT=${PROVISIONING_INT}
+  fi
+  echo "Using interface ${SECONDARY_INT} as the provisioning interface."
   SECONDARY_PREFIX=$(facter network_${SECONDARY_INT} | cut -d. -f1-3)
   SECONDARY_REVERSE=$(echo "$SECONDARY_PREFIX" | ( IFS='.' read a b c ; echo "$c.$b.$a.in-addr.arpa" ))
   FORWARDER=$(augtool get /files/etc/resolv.conf/nameserver[1] | awk '{printf $NF}')
