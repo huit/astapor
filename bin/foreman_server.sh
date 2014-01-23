@@ -33,7 +33,7 @@ if [ "x$FOREMAN_GATEWAY" = "x" ]; then
   echo "  use 'false' to have no gateway offered for non-routable networks"
   exit 1
 fi
-if  [ "x$PROVISIONING_INT" = "x" ]; then
+if  [ "x$PROVISIONING_INTERFACE" = "x" ]; then
   echo "Warning: You have not defined the interface to use to provision systems."
   echo " This script will attempt to guess that interface."
 fi
@@ -83,10 +83,10 @@ if [ "$FOREMAN_PROVISIONING" = "true" ]; then
   fi
   PRIMARY_INT=$(route|grep default|awk ' { print ( $(NF) ) }')
   PRIMARY_PREFIX=$(facter network_${PRIMARY_INT} | cut -d. -f1-3)
-  if [ "x${PROVISIONING_INT}" = "x" ]; then
+  if [ "x${PROVISIONING_INTERFACE}" = "x" ]; then
     SECONDARY_INT=$(facter -p|grep ipaddress_|grep -Ev "_lo|$PRIMARY_INT"|awk -F"[_ ]" '{print $2;exit 0}')
   else
-    SECONDARY_INT=${PROVISIONING_INT}
+    SECONDARY_INT=${PROVISIONING_INTERFACE}
   fi
   echo "Using interface ${SECONDARY_INT} as the provisioning interface."
   SECONDARY_PREFIX=$(facter network_${SECONDARY_INT} | cut -d. -f1-3)
