@@ -30,6 +30,13 @@ yum -y install augeas
 hostname ${name}.localnet
 augtool -s < /vagrant/bootstrap/hostnames.aug
 
+#
+# Upgrade or install some target packages ... needs to go away into puppet.
+#
+UP_RPMS="iproute"
+RPMS="sheepdog python-cinderclient"
+yum -y upgrade ${IP_RPMS}
+yum -y install ${RPMS}
 
 #
 # Configure puppet and register
