@@ -57,8 +57,18 @@ Vagrant.configure('2') do |config|
     controller.vm.network :forwarded_port, guest: 443, host: 9443, auto_correct: true
     
     controller.vm.network :forwarded_port, guest: 5000,  host: 5000, auto_correct: true
-    controller.vm.network :forwarded_port, guest: 9696,  host: 9696, auto_correct: true    
+    controller.vm.network :forwarded_port, guest: 35357,  host: 35357, auto_correct: true 
+    
     controller.vm.network :forwarded_port, guest: 9292,  host: 9292, auto_correct: true
+
+    controller.vm.network :forwarded_port, guest: 8773,  host: 8773, auto_correct: true  
+    controller.vm.network :forwarded_port, guest: 8774,  host: 8774, auto_correct: true  
+    controller.vm.network :forwarded_port, guest: 8775,  host: 8775, auto_correct: true  
+    controller.vm.network :forwarded_port, guest: 8776,  host: 8776, auto_correct: true 
+    controller.vm.network :forwarded_port, guest: 8777,  host: 8777, auto_correct: true 
+    controller.vm.network :forwarded_port, guest: 6080,  host: 6080, auto_correct: true 
+
+    controller.vm.network :forwarded_port, guest: 9696,  host: 9696, auto_correct: true    
 
     # provide a 2nd network
     controller.vm.network "private_network", ip: "192.168.1.3", virtualbox__intnet: "private"
