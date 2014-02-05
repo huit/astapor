@@ -1,7 +1,8 @@
-# Astapor
+# HUIT Astapor
 
 Configurations to set up foreman quickly, install openstack puppet modules
-and rapidly provision openstack compute & controller nodes with puppet.
+and rapidly provision openstack compute & controller nodes with puppet. Based on RedHta
+
 
 This install is based on the redhat packstack quickstart rpm that can be found here: http://openstack.redhat.com/Quickstart with a few modifications
  - ntp module added
