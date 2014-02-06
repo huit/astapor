@@ -222,11 +222,11 @@ class quickstack::controller_common (
     }
   }
   
-#  if str2bool_i("$keystonerc") {
-#    class { 'quickstack::admin_client':
-#      admin_password => $admin_password,
-#      controller_admin_host => $controller_admin_host,
-#    }
-#  }
+  if str2bool_i("$keystonerc") {
+    class { 'quickstack::admin_client':
+      admin_password => $admin_password,
+      controller_admin_host => $controller_admin_host,
+    }
+  }
 
 }
