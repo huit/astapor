@@ -9,21 +9,21 @@ class quickstack::admin_client(
   $clientlibs = [ "python-novaclient", 
                   "python-keystoneclient", 
                   "python-glanceclient", 
-                  "python-swiftclient", 
                   "python-cinderclient", 
                   "python-neutronclient", 
+                  "python-swiftclient", 
                   "python-heatclient" ]
 
-  package { $clientlibs: }
+#  package { $clientlibs: }
 
   $rcadmin_content = "export OS_USERNAME=admin 
 export OS_TENANT_NAME=admin   
 export OS_PASSWORD=$admin_password
 export OS_AUTH_URL=http://$controller_admin_host:35357/v2.0/
-export PS1='[\\u@\\h \\W(keystone_admin)]\\$'
+export PS1='[\\u@\\h \\W(openstack_admin)]\\$ '
 "
     
-  file {"${::home_dir}/keystonerc_admin":
+  file {"/root/keystonerc_admin":
      ensure  => "present",
      mode => '0600',
      content => $rcadmin_content,
