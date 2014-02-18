@@ -52,9 +52,34 @@ class quickstack::neutron::controller (
   $qpid_host                     = $quickstack::params::qpid_host,
   $swift_shared_secret           = $quickstack::params::swift_shared_secret,
   $swift_admin_password          = $quickstack::params::swift_admin_password,
+  $swift_ringserver_ip           = '192.168.203.1',
+  $swift_storage_ips             = ['192.168.203.2', '192.168.203.3', '192.168.203.4'],
+  $swift_storage_device          = 'device1',
   $tenant_network_type           = $quickstack::params::tenant_network_type,
   $verbose                       = $quickstack::params::verbose,
+  $ssl                           = $quickstack::params::ssl,
+  $freeipa                       = $quickstack::params::freeipa,
+  $mysql_ca                      = $quickstack::params::mysql_ca,
+  $mysql_cert                    = $quickstack::params::mysql_cert,
+  $mysql_key                     = $quickstack::params::mysql_key,
+  $qpid_ca                       = $quickstack::params::qpid_ca,
+  $qpid_cert                     = $quickstack::params::qpid_cert,
+  $qpid_key                      = $quickstack::params::qpid_key,
+  $horizon_ca                    = $quickstack::params::horizon_ca,
+  $horizon_cert                  = $quickstack::params::horizon_cert,
+  $horizon_key                   = $quickstack::params::horizon_key,
+  $qpid_nssdb_password           = $quickstack::params::qpid_nssdb_password,
 ) inherits quickstack::params {
+
+  if str2bool_i("$ssl") {
+    $qpid_protocol = 'ssl'
+    $qpid_port = '5671'
+    $sql_connection = "mysql://neutron:${neutron_db_password}@${mysql_host}/neutron?ssl_ca=${mysql_ca}"
+  } else {
+    $qpid_protocol = 'tcp'
+    $qpid_port = '5672'
+    $sql_connection = "mysql://neutron:${neutron_db_password}@${mysql_host}/neutron"
+  }
 
   class { 'quickstack::controller_common':
     admin_email                   => $admin_email,
@@ -92,7 +117,22 @@ class quickstack::neutron::controller (
     qpid_host                     => $qpid_host,
     swift_shared_secret           => $swift_shared_secret,
     swift_admin_password          => $swift_admin_password,
+    swift_ringserver_ip           => $swift_ringserver_ip,
+    swift_storage_ips             => $swift_storage_ips,
+    swift_storage_device          => $swift_storage_device,
     verbose                       => $verbose,
+    ssl                           => $ssl,
+    freeipa                       => $freeipa,
+    mysql_ca                      => $mysql_ca,
+    mysql_cert                    => $mysql_cert,
+    mysql_key                     => $mysql_key,
+    qpid_ca                       => $qpid_ca,
+    qpid_cert                     => $qpid_cert,
+    qpid_key                      => $qpid_key,
+    horizon_ca                    => $horizon_ca,
+    horizon_cert                  => $horizon_cert,
+    horizon_key                   => $horizon_key,
+    qpid_nssdb_password           => $qpid_nssdb_password,
   }
   ->
   class { '::neutron':
@@ -101,6 +141,8 @@ class quickstack::neutron::controller (
     allow_overlapping_ips => true,
     rpc_backend           => 'neutron.openstack.common.rpc.impl_qpid',
     qpid_hostname         => $qpid_host,
+    qpid_port             => $qpid_port,
+    qpid_protocol         => $qpid_protocol,
     core_plugin           => $neutron_core_plugin
   }
   ->
@@ -119,7 +161,7 @@ class quickstack::neutron::controller (
   class { '::neutron::server':
     auth_host        => $::ipaddress,
     auth_password    => $neutron_user_password,
-    connection       => "mysql://neutron:${neutron_db_password}@${mysql_host}/neutron",
+    connection       => $sql_connection,
     sql_connection   => false,
   }
 
@@ -176,7 +218,7 @@ class quickstack::neutron::controller (
     }
 
     class { '::neutron::plugins::ovs':
-      sql_connection      => "mysql://neutron:${neutron_db_password}@${mysql_host}/neutron",
+      sql_connection      => $sql_connection,
       tenant_network_type => $tenant_network_type,
       network_vlan_ranges => $ovs_vlan_ranges,
       tunnel_id_ranges    => $tunnel_id_ranges,
@@ -195,6 +237,7 @@ class quickstack::neutron::controller (
       provider_vlan_auto_create    => $provider_vlan_auto_create,
       provider_vlan_auto_trunk     => $provider_vlan_auto_trunk,
       mysql_host                   => $mysql_host,
+      mysql_ca                     => $mysql_ca,
       tenant_network_type          => $tenant_network_type,
     }
   }

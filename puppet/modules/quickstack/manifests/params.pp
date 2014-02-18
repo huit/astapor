@@ -102,4 +102,23 @@ class quickstack::params {
   $mysql_shared_storage_type     = 'MYSQL_SHARED_STORAGE_TYPE'
   $mysql_clu_member_addrs        = 'SPACE_SEPARATED_IP_ADDRS'
   $mysql_resource_group_name     = 'mysqlgroup'
+
+  # SSL
+  $ssl                           = 'false'
+  $freeipa                       = 'false'
+  $mysql_ca                      = '/etc/ipa/ca.crt'
+  $mysql_cert                    = undef
+  $mysql_key                     = undef
+  $qpid_ca                       = undef
+  $qpid_cert                     = undef
+  $qpid_key                      = undef
+  $horizon_ca                    = '/etc/ipa/ca.crt'
+  $horizon_cert                  = undef
+  $horizon_key                   = undef
+  $qpid_nssdb_password           = 'CHANGEME'
+
+  # Pacemaker
+  $pacemaker_cluster_name        = 'openstack'
+  $pacemaker_cluster_members     = ''
+  $pacemaker_disable_stonith     = true
 }
